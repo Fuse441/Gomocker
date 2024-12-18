@@ -1,12 +1,60 @@
 package routes
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func SetupRoutes(app *fiber.App) {
+	app.Post("/sky-fbb-uat/sky-auth/v1/user/authenticate", func(c *fiber.Ctx) error {
+		println("-------Login SKY-------")
+
+		data := map[string]interface{}{
+			"token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..ziAKMwAL_NiFWHecY1UiUqwI36Us0wkSHMYesv8m9ew",
+		}
+
+		log.Println("log API login SKY ==> ", (data))
+
+		return c.JSON(data)
+	})
+	// app.Post("/fbb/changeproduct/conductor/v1/order/qualify", func(c *fiber.Ctx) error {
+	// 	println("-------API FBB-------")
+	// 	println("-------Request from AC-------")
+
+	// 	data := map[string]interface{}{
+	// 		"state": "acknowledge",
+	// 		"externalId": []map[string]string{
+	// 			{
+	// 				"id":    "SO-58btl-240726133936340936104835",
+	// 				"owner": "SKY",
+	// 			},
+	// 			{
+	// 				"id":    "CO-qgfts-24072613393670169867",
+	// 				"owner": "SFF",
+	// 			},
+	// 		},
+	// 	}
+
+	// 	// dataFail := map[string]interface{}{
+	// 	// 	"orderNo": "1234",
+	// 	// 	"message": "1234",
+	// 	// 	"errors": []map[string]string{
+	// 	// 		{
+	// 	// 			"id":        "EB090",
+	// 	// 			"statement": "Connot 1",
+	// 	// 		},
+	// 	// 		{
+	// 	// 			"id":        "EB090",
+	// 	// 			"statement": "Connot 1",
+	// 	// 		},
+	// 	// 	},
+	// 	// }
+	// 	// Parse JSON body into struct
+	// 	// time.Sleep(11 * time.Second)
+	// 	return c.Status(fiber.StatusOK).JSON(data)
+	// })
+
 	app.Post("/CollectionService/queryDocument", func(c *fiber.Ctx) error {
 
 		data := map[string]interface{}{
@@ -45,9 +93,9 @@ func SetupRoutes(app *fiber.App) {
 						"eReceiptFlag": "N",
 						"channelDesc":  "สำ นกังำนใหญ่",
 						"periodFirst":  "",
-						"periodLast":   "032019",
-						"docType":      "RECEIPT",
-						"createDtm":    "13/09/2023 13:12:11",
+						// "periodLast":  "032019",
+						"docType":   "RECEIPT",
+						"createDtm": "13/09/2023 13:12:11",
 						"methodList": []map[string]interface{}{
 							{"methodDesc": "เงินสด"},
 						},
@@ -69,7 +117,12 @@ func SetupRoutes(app *fiber.App) {
 			"ErrorCode": "000",
 		}
 
-		fmt.Println("in come rounte")
 		return c.JSON(data)
 	})
+
+	app.Use(func(c *fiber.Ctx) error {
+		c.Context().Conn().Close()
+		return nil
+	})
+
 }
